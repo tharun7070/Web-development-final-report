@@ -84,11 +84,14 @@ a { color:var(--text); text-decoration:none; }
 <script>
 const data = [
   {name:"iPhone 15",price:"₹79,900",img:"https://m.media-amazon.com/images/I/71d7rfSl0wL._SX679_.jpg",prices:{Amazon:"₹79,900",Flipkart:"₹78,499",Croma:"₹79,000"}},
-  {name:"Samsung Galaxy S24",price:"₹74,999",img:"https://m.media-amazon.com/images/I/71d5fMDvq9L._SX679_.jpg",prices:{Amazon:"₹74,999",Flipkart:"₹73,500",Croma:"₹74,000"}},
+  {name:"Samsung OLED S4k",price:"₹74,999",img:"https://m.media-amazon.com/images/I/71d5fMDvq9L._SX679_.jpg",prices:{Amazon:"₹74,999",Flipkart:"₹73,500",Croma:"₹74,000"}},
   {name:"PlayStation 5",price:"₹54,990",img:"https://m.media-amazon.com/images/I/619BkvKW35L._SX679_.jpg",prices:{Amazon:"₹54,990",Flipkart:"₹53,499",Croma:"₹54,500"}},
   {name:"Xbox Series X",price:"₹52,990",img:"https://m.media-amazon.com/images/I/71NBQ2a52CL._SX679_.jpg",prices:{Amazon:"₹52,990",Flipkart:"₹51,999",Croma:"₹52,500"}},
   {name:"Nintendo Switch OLED",price:"₹32,990",img:"https://m.media-amazon.com/images/I/61-PblYntsL._SX679_.jpg",prices:{Amazon:"₹32,990",Flipkart:"₹31,999",Croma:"₹32,500"}}
 ];
+
+const wishlist = [];
+const alerts = [];
 
 function render(){
   document.getElementById("products").innerHTML = data.map((p,idx)=>
@@ -98,8 +101,8 @@ function render(){
       <p>${p.price}</p>
       <a href='#'>Buy</a><br><br>
       <button onclick="showCompare(${idx})">Compare</button>
-      <button>Wishlist</button>
-      <button>Price Alert</button>
+      <button onclick="addWishlist(${idx})">Wishlist</button>
+      <button onclick="setPriceAlert(${idx})">Price Alert</button>
     </div>`).join('');
 }
 
@@ -130,8 +133,30 @@ function closeCompare(){
   document.getElementById('compareModal').style.display = 'none';
 }
 
+function addWishlist(index){
+  const product = data[index];
+  if(!wishlist.includes(product.name)){
+    wishlist.push(product.name);
+    alert(product.name + " added to wishlist!");
+  } else {
+    alert(product.name + " is already in wishlist!");
+  }
+}
+
+function setPriceAlert(index){
+  const product = data[index];
+  if(!alerts.includes(product.name)){
+    alerts.push(product.name);
+    alert("Price alert set for " + product.name);
+  } else {
+    alert("Price alert already set for " + product.name);
+  }
+}
+
 render();
 </script>
 </body>
 </html>
+
+
 
