@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BuySmart - Product Comparison</title>
+<style>
+:root { --bg:#111; --text:#ffb86c; --card:#181818; }
+body.light { --bg:#fff; --text:#333; --card:#eee; }
+body { background:var(--bg); color:var(--text); font-family:sans-serif; margin:0; }
+header { padding:1em; display:flex; justify-content:space-between; background:var(--card); align-items:center; }
+header h1 { margin:0; font-size:1.5em; color:orange; }
+button { background:orange; border:none; padding:5px 10px; cursor:pointer; border-radius:5px; }
+#products { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1em; padding:1em; }
+.card { background:var(--card); padding:1em; border-radius:8px; text-align:center; box-shadow:0 0 10px rgba(0,0,0,0.3); }
+.card img { width:100%; height:150px; object-fit:contain; background:white; border-radius:5px; }
+a { color:var(--text); text-decoration:none; }
+
+/* Modal styles */
+#compareModal {
+  display:none;
+  position:fixed;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  background:var(--card);
+  padding:1em;
+  border-radius:8px;
+  z-index:999;
+  box-shadow:0 0 15px rgba(0,0,0,0.5);
+  max-width:400px;
+  width:90%;
+}
+#compareModal table {
+  width:100%;
+  border-collapse:collapse;
+}
+#compareModal th, #compareModal td {
+  padding:8px;
+  border-bottom:1px solid #555;
+  text-align:left;
+}
+#overlay {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.6);
+  z-index:998;
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>BuySmart</h1>
+  <div>
+    <button onclick="toggleTheme()">🌓</button>
+    <button onclick="showLogin()">Login</button>
+  </div>
+</header>
+
+<div id="products"></div>
+
+<!-- Login Modal -->
+<div id="login" style="display:none;position:fixed;top:20%;left:50%;transform:translateX(-50%);background:var(--card);padding:1em;border-radius:8px;z-index:999;">
+  <h3>Login to BuySmart</h3>
+  <input placeholder="Email"><br><br>
+  <input type="password" placeholder="Password"><br><br>
+  <button onclick="hideLogin()">Submit</button>
+</div>
+
+<!-- Compare Modal -->
+<div id="overlay"></div>
+<div id="compareModal">
+  <h3 id="compareTitle"></h3>
+  <table>
+    <thead>
+      <tr><th>Store</th><th>Price</th></tr>
+    </thead>
+    <tbody id="compareBody"></tbody>
+  </table>
+  <br>
+  <button onclick="closeCompare()">Close</button>
+</div>
+
+<script>
+const data = [
+  {name:"iPhone 15",price:"₹79,900",img:"https://m.media-amazon.com/images/I/71d7rfSl0wL._SX679_.jpg",prices:{Amazon:"₹79,900",Flipkart:"₹78,499",Croma:"₹79,000"}},
+  {name:"Samsung Galaxy S24",price:"₹74,999",img:"https://m.media-amazon.com/images/I/71d5fMDvq9L._SX679_.jpg",prices:{Amazon:"₹74,999",Flipkart:"₹73,500",Croma:"₹74,000"}},
+  {name:"PlayStation 5",price:"₹54,990",img:"https://m.media-amazon.com/images/I/619BkvKW35L._SX679_.jpg",prices:{Amazon:"₹54,990",Flipkart:"₹53,499",Croma:"₹54,500"}},
+  {name:"Xbox Series X",price:"₹52,990",img:"https://m.media-amazon.com/images/I/71NBQ2a52CL._SX679_.jpg",prices:{Amazon:"₹52,990",Flipkart:"₹51,999",Croma:"₹52,500"}},
+  {name:"Nintendo Switch OLED",price:"₹32,990",img:"https://m.media-amazon.com/images/I/61-PblYntsL._SX679_.jpg",prices:{Amazon:"₹32,990",Flipkart:"₹31,999",Croma:"₹32,500"}}
+];
+
+function render(){
+  document.getElementById("products").innerHTML = data.map((p,idx)=>
+    `<div class='card'>
+      <img src='${p.img}' alt='${p.name}'>
+      <h4>${p.name}</h4>
+      <p>${p.price}</p>
+      <a href='#'>Buy</a><br><br>
+      <button onclick="showCompare(${idx})">Compare</button>
+      <button>Wishlist</button>
+      <button>Price Alert</button>
+    </div>`).join('');
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+}
+function showLogin(){
+  document.getElementById('login').style.display='block';
+}
+function hideLogin(){
+  document.getElementById('login').style.display='none';
+}
+
+function showCompare(index){
+  const product = data[index];
+  document.getElementById('compareTitle').innerText = "Compare Prices - " + product.name;
+  
+  const rows = Object.entries(product.prices)
+    .map(([store,price]) => `<tr><td>${store}</td><td>${price}</td></tr>`)
+    .join('');
+  
+  document.getElementById('compareBody').innerHTML = rows;
+  document.getElementById('overlay').style.display = 'block';
+  document.getElementById('compareModal').style.display = 'block';
+}
+function closeCompare(){
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('compareModal').style.display = 'none';
+}
+
+render();
+</script>
+</body>
+</html>
+
